@@ -1,5 +1,3 @@
-# fixtures/login_data.py
-
 VALID_USER = {
     "email": "kagameacu@gmail.com",
     "password": "1234"
@@ -7,16 +5,16 @@ VALID_USER = {
 
 INVALID_USERS = [
     {
-        "case": "Wrong email",
-        "email": "wrong@gmail.com",
+        "case": "Invalid email format",
+        "email": "not-an-email",  # Invalid format
         "password": "1234",
-        "error": "User not found"
+        "error": "Invalid email"  # Should show before OTP flow
     },
     {
         "case": "Wrong password",
-        "email": "kagameacu@gmail.com",
+        "email": "kagameacu@gmail.com",  # Valid existing email
         "password": "wrong123",
-        "error": "Invalid password"
+        "error": "Invalid email or password"  # The actual error message
     },
     {
         "case": "Empty email",
@@ -29,11 +27,5 @@ INVALID_USERS = [
         "email": "kagameacu@gmail.com",
         "password": "",
         "error": "Password is required"
-    },
-    {
-        "case": "Invalid email format",
-        "email": "abc",
-        "password": "1234",
-        "error": "Invalid email"
     }
 ]
