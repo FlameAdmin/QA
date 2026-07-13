@@ -39,11 +39,14 @@ class LoginPage:
         expect(self.page).to_have_url(
             re.compile(r".*user/home.*")
         )
+        # expect(self.error_message).not_to_be_visible()
 
     def verify_login_failed(self):
-        expect(self.page).not_to_have_url(
-            re.compile(r".*user/home.*")
-        )
+        expect(self.error_message).to_be_visible()
+
+    def verify_error_message(self, expected_message):
+        expect(self.error_message).to_be_visible()
+        expect(self.error_message).to_contain_text(expected_message)
 
     def click_forgot_password(self):
         self.forgot_password_link.click()
