@@ -115,4 +115,4 @@ def allure_environment_info():
         f.write("Allure.Version=2.44.0\n")
 
 # ============== IMPORT TEST DATA FIXTURES ==============
-from fixtures.test_data import existing_user, new_user
+# from fixtures.test_data import existing_user, new_user
