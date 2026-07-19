@@ -50,23 +50,3 @@ class LoginPage:
 
     def click_forgot_password(self):
         self.forgot_password_link.click()
-
-
-
-# from playwright.sync_api import Page
-
-# class LoginPage:
-#     def __init__(self, page: Page):
-#         self.page = page
-#         self.email_input = page.get_by_role("textbox", name="email")
-#         self.password_input = page.get_by_role("textbox", name="Password")
-#         self.next_button = page.get_by_role("button", name="Next")
-        
-#     def enter_email(self, email: str):
-#         self.email_input.fill(email)
-    
-#     def enter_password(self, password: str):
-#         self.password_input.fill(password)
-    
-#     def click_next(self):
-#         self.next_button.click()

@@ -71,34 +71,3 @@ class BaseModal:
             return True
         except:
             return False
-
-
-
-# import re
-# from playwright.sync_api import Page
-
-# class BaseModal:
-#     """Base class for all modals with common methods"""
-    
-#     def __init__(self, page: Page):
-#         self.page = page
-#         self.close_button = page.get_by_role("button").filter(has_text=re.compile(r"^$"))
-#         self.ok_button = page.get_by_role("button", name="OK")
-    
-#     def close_modal(self):
-#         """Close the modal using the close button"""
-#         try:
-#             self.close_button.click(timeout=3000)
-#         except:
-#             pass  # Modal might close automatically
-    
-#     def click_ok(self):
-#         """Click OK button on modal"""
-#         self.ok_button.click()
-    
-#     def is_modal_visible(self):
-#         """Check if modal is visible"""
-#         try:
-#             return self.close_button.is_visible()
-#         except:
-#             return False
