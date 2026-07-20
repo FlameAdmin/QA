@@ -1,8 +1,5 @@
-import re
 import allure
-from playwright.sync_api import Page, expect
-from pages.home_page import HomePage
-from pages.login_page import LoginPage
+from playwright.sync_api import Page
 from pages.dashboard_page import DashboardPage
 from pages.modals.referral_modal import ReferralModal
 
@@ -11,31 +8,33 @@ from pages.modals.referral_modal import ReferralModal
 @allure.story("Copy Referral Link")
 @allure.severity(allure.severity_level.NORMAL)
 @allure.tag("referral")
-def test_referral_flow(page: Page) -> None:
-    with allure.step("Login to application"):
-        home_page = HomePage(page)
-        home_page.open_login()
-        # home_page.accept_cookies()
-        # home_page.click_get_started()
-        
-        login_page = LoginPage(page)
-        login_page.enter_email("kagameacu@gmail.com")
-        login_page.click_next()
-        login_page.enter_password("1234")
-        login_page.click_next()
-        
-        page.wait_for_timeout(3000)
-        expect(page).to_have_url(re.compile(r".*user/home.*"))
+def test_referral_flow(logged_in_page: Page) -> None:
+    """Test referral link copying functionality"""
+    page = logged_in_page
     
     with allure.step("Open referral modal"):
         dashboard = DashboardPage(page)
         dashboard.click_referral()
+        page.wait_for_timeout(1000)  # Wait for modal animation
     
     with allure.step("Copy referral link"):
         referral_modal = ReferralModal(page)
+        
+        # Verify modal is visible
+        assert referral_modal.is_modal_visible(), "Referral modal should be visible"
+        
+        # Click referral link button
         referral_modal.click_referral_link()
+        
+        # Click OK to close the copy confirmation
         referral_modal.click_ok()
+        
+        # Close the referral modal
         referral_modal.close_modal()
+        referral_modal.wait_for_modal_to_disappear()
+    
+    with allure.step("Verify dashboard is still accessible"):
+        assert dashboard.is_on_dashboard(), "Should remain on dashboard after closing modal"
     
     with allure.step("Logout"):
         dashboard.click_logout()
