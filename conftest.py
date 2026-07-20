@@ -6,6 +6,7 @@ from datetime import datetime
 from playwright.sync_api import Page, expect
 from pages.home_page import HomePage
 from pages.login_page import LoginPage
+from pages.dashboard_page import DashboardPage
 
 # ============== HOOKS FOR SCREENSHOTS ON FAILURE ==============
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
@@ -114,5 +115,18 @@ def allure_environment_info():
         f.write("Playwright.Version=1.61.0\n")
         f.write("Allure.Version=2.44.0\n")
 
-# ============== IMPORT TEST DATA FIXTURES ==============
-# from fixtures.test_data import existing_user, new_user
+
+@pytest.fixture
+def referral_test_user(logged_in_page):
+    """Fixture that returns a logged-in user ready for referral testing"""
+    page = logged_in_page
+    dashboard = DashboardPage(page)
+    
+    # Verify we're on dashboard
+    assert dashboard.is_on_dashboard(), "User should be on dashboard"
+    
+    return {
+        "page": page,
+        "dashboard": dashboard
+    }
+
