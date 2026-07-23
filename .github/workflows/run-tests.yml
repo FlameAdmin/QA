@@ -27,7 +27,7 @@ jobs:
           playwright install chromium --with-deps
 
       - name: Run tests
-        run: pytest tests/ --alluredir=reports/allure-results || true
+        run: pytest tests/ --headless --alluredir=reports/allure-results || true
 
       - name: Generate Allure report
         run: allure generate reports/allure-results -o reports/allure-report --clean
