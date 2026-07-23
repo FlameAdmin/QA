@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: '3.12'
 
@@ -27,7 +27,10 @@ jobs:
           playwright install chromium --with-deps
 
       - name: Run tests
-        run: pytest tests/ --headless --alluredir=reports/allure-results || true
+        run: |
+          pytest tests/ \
+            --override-ini="addopts=--browser chromium --alluredir=reports/allure-results --html=reports/report.html --self-contained-html" \
+            || true
 
       - name: Generate Allure report
         run: allure generate reports/allure-results -o reports/allure-report --clean
