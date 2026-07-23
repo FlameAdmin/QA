@@ -1,0 +1,50 @@
+name: QA Tests — Allure Report
+
+on:
+  push:
+    branches: [ main, testing ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Allure CLI
+        run: npm install -g allure-commandline
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
+
+      - name: Run tests
+        run: pytest tests/ --alluredir=reports/allure-results || true
+
+      - name: Generate Allure report
+        run: allure generate reports/allure-results -o reports/allure-report --clean
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/server_key
+          chmod 600 ~/.ssh/server_key
+          ssh-keyscan -p 22 16.171.241.209 >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Upload report to server
+        run: |
+          rsync -avz \
+            --no-perms --no-owner --no-group \
+            -e "ssh -i ~/.ssh/server_key -p 22 -o StrictHostKeyChecking=no" \
+            reports/allure-report/ \
+            ubuntu@16.171.241.209:/home/ubuntu/qa-report/
+          ssh -i ~/.ssh/server_key -o StrictHostKeyChecking=no ubuntu@16.171.241.209 \
+            "chmod -R o+rX /home/ubuntu/qa-report"
